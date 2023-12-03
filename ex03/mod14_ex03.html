@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        input {
+            width: 200px;
+            margin: 20px 0;
+        }
+    </style>
+    <script>
+        function getValue() {
+            const enteredValue = document.querySelector('input').value;
+
+            document.querySelector('#warning').innerText = '';
+            if (enteredValue < 0 || enteredValue > 10) {
+                document.querySelector('#warning').innerText = 'число вне диапазона от 1 до 10';
+                return;
+            }
+            
+            getPhoto(enteredValue, result => console.log(result));
+        }
+
+        function getPhoto(n, callback) {
+            xhr = new XMLHttpRequest()
+
+            xhr.open('GET', `https://jsonplaceholder.typicode.com/photos?_limit=${n}`, true);
+
+            xhr.onload = function() {
+                if (xhr.status != 200) {
+                    console.log('Статус ответа: ', xhr.status);
+                } else {
+                    const result = JSON.parse(xhr.response);
+                    if (callback) {
+                        callback(result);
+                    }
+                }
+            };
+
+            xhr.onerror = function() {
+                console.log('Ошибка! Статус ответа: ', xhr.status);
+            };
+  
+            xhr.send();
+        }
+    </script>
+</head>
+<body>
+    <input type="text" name="text" placeholder="Введите число от 0 до 10">
+    <button onclick="getValue()" type="submit">GO</button>
+    <div id="warning"></div>
+</body>
+</html>

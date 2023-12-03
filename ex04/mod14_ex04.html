@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        input {
+            width: 200px;
+            margin: 20px 0;
+        }
+    </style>
+    <script>
+        function getValues() {
+            const enteredWidth = Number(document.querySelector('input[name=width]').value);
+            const enteredHeight = Number(document.querySelector('input[name=height]').value);
+            console.log(enteredWidth);
+            console.log(enteredHeight);
+
+            document.querySelector('#warning').innerText = '';
+            document.querySelector('img').setAttribute('src', null);
+            if (
+                isNaN(enteredWidth) || isNaN(enteredHeight)
+                || enteredWidth < 100 || enteredHeight > 300 
+                || enteredWidth < 100 || enteredHeight > 300
+            ) {
+                document.querySelector('#warning').innerText = 'одно из чисел вне диапазона от 100 до 300';
+                return;
+            }
+            
+            getPhoto(enteredWidth, enteredHeight, imgData => {
+                document.querySelector('img').setAttribute('src', URL.createObjectURL(imgData));
+            });
+        }
+
+        function getPhoto(x, y, callback) {
+            fetch(`https://dummyimage.com/${x}x${y}/`)
+            .then(response => response.blob())
+            .then(data => callback(data))
+            .catch((error) => {
+                console.log('Ошибка: ', error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <label for="width">Ширина: </label>
+        <input type="text" name="width" placeholder="Введите число от 100 до 300">
+    </div>
+    <div>
+        <label for="height">Высота: </label>
+        <input type="text" name="height" placeholder="Введите число от 100 до 300">
+    </div>
+    <button onclick="getValues()" type="submit">GO</button>
+    <div id="warning"></div>
+    <img src="" alt="">
+</body>
+</html>
